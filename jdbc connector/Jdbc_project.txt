@@ -1,0 +1,60 @@
+package Jdbc_project;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class proj {
+	
+	private static final String url = "jdbc:mysql://localhost:3306/railworld_india";
+	private static final String username = "root";
+	private static final String password = "12345";
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		try (Connection connection = DriverManager.getConnection(url, username, password);
+	             Scanner scanner = new Scanner(System.in)) {
+
+	            boolean exit = false;
+
+	            while (!exit) {
+	                System.out.println("CRUD Operations Menu:");
+	                System.out.println("1. Create");
+	                System.out.println("2. Read");
+	                System.out.println("3. Update");
+	                System.out.println("4. Delete");
+	                System.out.println("5. Exit");
+	                System.out.print("Enter your choice: ");
+
+	                int choice = scanner.nextInt();
+	                scanner.nextLine(); // Consume the newline character
+	                calling cal = new calling();
+
+	                switch (choice) {
+	                    case 1:
+	                        cal.createEmployee(connection, scanner);
+	                        break;
+	                    case 2:
+	                        cal.readEmployee(connection);
+	                        break;
+	                    case 3:
+	                        cal.updateEmployee(connection, scanner);
+	                        break;
+	                    case 4:
+	                        cal.deleteEmployee(connection, scanner); //    deleteEmployee
+	                        break;
+	                    case 5:
+	                        exit = true;
+	                        break;
+	                    default:
+	                        System.out.println("Invalid choice. Please try again.");
+	                        break;
+	                }
+	            }
+	        } 
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}
