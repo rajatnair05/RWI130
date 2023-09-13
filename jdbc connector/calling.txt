@@ -1,0 +1,95 @@
+package Jdbc_project;
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class calling {
+
+		public void createEmployee(Connection connection, Scanner scanner) throws SQLException {
+			System.out.print("Enter employee id: ");
+		    int id = scanner.nextInt();
+		    scanner.nextLine();
+			
+		    System.out.print("Enter employee name: ");
+		    String name = scanner.nextLine();
+
+		    System.out.print("Enter employee salary: ");
+		    double salary = scanner.nextDouble();
+		    scanner.nextLine(); // Consume the newline character
+
+		    String sql = "INSERT INTO employees (id, name, salary) VALUES (?, ?, ?)";
+		    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+		        preparedStatement.setInt(1, id);
+		        preparedStatement.setString(2, name);
+		        preparedStatement.setDouble(3, salary);
+		        int rowsInserted = preparedStatement.executeUpdate();
+		        if (rowsInserted > 0) {
+		            System.out.println("Employee inserted successfully.");
+		        } else {
+		            System.out.println("Failed to insert employee.");
+		        }
+		    }
+		}
+
+
+		public void readEmployee(Connection connection) throws SQLException {
+		    String sql = "SELECT * FROM employees";
+		    try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		         ResultSet resultSet = preparedStatement.executeQuery()) {
+		        while (resultSet.next()) {
+		            int id = resultSet.getInt("id");
+		            String name = resultSet.getString("name");
+		            double salary = resultSet.getDouble("salary");
+		            System.out.println("ID: " + id + ", Name: " + name + ", Salary: " + salary);
+		        }
+		    }
+		}
+
+		public void updateEmployee(Connection connection, Scanner scanner) throws SQLException {
+		    System.out.print("Enter employee ID to update: ");
+		    int id = scanner.nextInt();
+		    scanner.nextLine(); // Consume the newline character
+
+		    System.out.print("Enter new name: ");
+		    String name = scanner.nextLine();
+
+		    System.out.print("Enter new salary: ");
+		    double salary = scanner.nextDouble();
+		    scanner.nextLine(); // Consume the newline character
+
+		    String sql = "UPDATE employees SET name = ?, salary = ? WHERE id = ?";
+		    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+		        preparedStatement.setString(1, name);
+		        preparedStatement.setDouble(2, salary);
+		        preparedStatement.setInt(3, id);
+		        int rowsUpdated = preparedStatement.executeUpdate();
+		        if (rowsUpdated > 0) {
+		            System.out.println("Employee updated successfully.");
+		        } else {
+		            System.out.println("Employee with ID " + id + " not found.");
+		        }
+		    }
+		}
+
+		public void deleteEmployee(Connection connection, Scanner scanner) throws SQLException {
+		    System.out.print("Enter employee ID to delete: ");
+		    int id = scanner.nextInt();
+		    scanner.nextLine(); // Consume the newline character
+
+		    String sql = "DELETE FROM employees WHERE id = ?";
+		    try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+		        preparedStatement.setInt(1, id);
+		        int rowsDeleted = preparedStatement.executeUpdate();
+		        if (rowsDeleted > 0) {
+		            System.out.println("Employee deleted successfully.");
+		        } 
+		        else {
+		        	System.out.println("Employee with ID" + id + "not found." );
+		        }
+		    }
+		}
+}
